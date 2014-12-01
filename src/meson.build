@@ -9,7 +9,7 @@ openal = dependency('openal')
 qt5 = dependency('qt5',
     modules : ['Widgets', 'PrintSupport'])
 
-srcs = ['main.cpp', 'audio_plot.cpp', 'qcustomplot.cpp', 'openal_capture.cpp']
+srcs = ['main.cpp', 'audio_plot.cpp', 'fourier_transform.cpp', 'qcustomplot.cpp', 'openal_capture.cpp']
 executable('blink-lights',
     moc_headers : ['audio_plot.hpp', 'qcustomplot.h'],
     sources : srcs,

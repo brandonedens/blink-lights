@@ -21,6 +21,7 @@
 #include <QApplication>
 
 #include "audio_plot.hpp"
+#include "fourier_transform.hpp"
 #include "openal_capture.hpp"
 
 /*******************************************************************************
@@ -28,6 +29,12 @@
  */
 using namespace std;
 using namespace bl;
+
+/*******************************************************************************
+ * Constants
+ */
+
+constexpr auto freq = 22050;
 
 /******************************************************************************/
 
@@ -38,8 +45,16 @@ int main(int argc, char *argv[])
 	win.show();
 
 	OpenAlCapture cap{};
-	thread t{&OpenAlCapture::start, &cap, [&win](int16_t* data, size_t sz) {
+	FourierTransform fft{freq / 8};
+
+	thread t{&OpenAlCapture::start, &cap,
+	         [&fft, &win](int16_t* data, size_t sz) {
 		win.add_data(data, sz);
+		fft.add(data, sz);
+		fft.process();
+		auto fft_out = fft.fft();
+		win.add_fft(fft_out, fft_out.size());
+		win.replot();
 	}};
 
 	return app.exec();

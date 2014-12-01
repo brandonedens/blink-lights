@@ -1,51 +1,50 @@
 /** @file
- * Interface of audio_plot
+ * Interface to software for performing fourier transform.
  *
  *==============================================================================
  * Copyright 2014 by Brandon Edens. All Rights Reserved
  *==============================================================================
  *
  * @author  Brandon Edens
- * @date    2014-11-22
+ * @date    2014-11-30
  * @details
  *
  */
-#ifndef AUDIO_PLOT_HPP_
-#define AUDIO_PLOT_HPP_
+#ifndef FOURIER_TRANSFORM_HPP_
+#define FOURIER_TRANSFORM_HPP_
 
 /*******************************************************************************
  * Include Files
  */
-#include <memory>
+
+#include <cstdint>
 #include <vector>
-
-#include <QMainWindow>
-#include <QWidget>
-
-#include "qcustomplot.h"
 
 /*******************************************************************************
  * Namespaces
  */
-namespace bl
-{
+namespace bl {
 
 /*******************************************************************************
  * Classes
  */
 
-class PlotWindow : public QMainWindow
+class FourierTransform
 {
-	Q_OBJECT
 public:
-	explicit PlotWindow(QWidget *parent = 0);
-	void add_data(int16_t* sample, size_t sz);
-	void add_fft(std::vector<double>& data, size_t sz);
-	void replot();
+	FourierTransform(const int samples_per_fft);
+	/** Add data to the FFT transform. */
+	void add(int16_t *data, size_t sz);
+	/** Process the available data. */
+	void process();
+	std::vector<double>& fft() { return results; }
 
 private:
-	std::shared_ptr<QCustomPlot> plot;
+	const int samples_max;
+	std::vector<double> samples;
+	std::vector<double> results;
 };
 
+
 }
-#endif  // AUDIO_PLOT_HPP_
+#endif  // FOURIER_TRANSFORM_HPP_
