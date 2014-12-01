@@ -69,13 +69,14 @@ void FourierTransform::process()
 	    fftw_plan_dft_r2c_1d(nfft, fft_in, fft_out, FFTW_ESTIMATE);
 	// TODO load fft_in
 	fftw_execute(plan);
-	results.resize(nfft / 2 + 1);
 
+	results.clear();
 	for (auto i = 0; i < (nfft / 2 + 1); i++) {
 		auto re = fft_out[i][0];
 		auto im = fft_out[i][1];
 		auto mag = sqrt((re * re) + (im * im));
-		results[i] = mag;
+
+		results.push_back(mag);
 	}
 
 	fftw_destroy_plan(plan);
